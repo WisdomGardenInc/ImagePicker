@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "originVersion": "2.3.6",
   "name": "@wisdomgarden/cordova-plugin-imagepicker",
   "cordova_name": "ImagePicker",
@@ -19,12 +19,16 @@
       "wp8"
     ]
   },
+  "author":"wisdomgarden",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WisdomGardenInc/ImagePicker"
+    "url": "https://github.com/WisdomGardenInc/ImagePicker"
   },
   "engines": {
     "name": "cordova",
     "version": ">=3.5.0"
+  },
+  "publishConfig": {
+    "registry":"https://registry.npmjs.org"
   }
 }
