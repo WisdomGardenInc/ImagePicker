@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="cordova-plugin-telerik-imagepicker"
+  id="@wisdomgarden/cordova-plugin-imagepicker"
   version="2.3.5">
 
     <name>ImagePicker</name>
@@ -110,12 +110,9 @@
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
 
-        <preference name="ANDROID_SUPPORT_V7_VERSION" default="27.+"/>
-        <framework src="com.android.support:appcompat-v7:$ANDROID_SUPPORT_V7_VERSION" />
-
-        <source-file src="src/android/com/synconset/ImagePicker/ImagePicker.java" target-dir="src/com/synconset" />
-        <source-file src="src/android/com/synconset/ImagePicker/FakeR.java" target-dir="src/com/synconset" />
-        <source-file src="src/android/com/synconset/ImagePicker/ResultIPC.java" target-dir="src/com/synconset" />
+        <source-file src="src/android/com/wisdomgarden/trpc/ImagePicker/ImagePicker.java" target-dir="src/com/synconset" />
+        <source-file src="src/android/com/wisdomgarden/trpc/ImagePicker/FakeR.java" target-dir="src/com/synconset" />
+        <source-file src="src/android/com/wisdomgarden/trpc/ImagePicker/ResultIPC.java" target-dir="src/com/synconset" />
 
         <source-file src="src/android/Library/src/ImageFetcher.java" target-dir="src/com/synconset"/>
         <source-file src="src/android/Library/src/MultiImageChooserActivity.java" target-dir="src/com/synconset"/>
