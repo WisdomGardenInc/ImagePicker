@@ -1,32 +1,32 @@
 /*
- * Copyright (c) 2012, David Erosa
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following  conditions are met:
- *
- *   Redistributions of source code must retain the above copyright notice, 
- *      this list of conditions and the following disclaimer.
- *   Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following  disclaimer in the 
- *      documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDIN G NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
- * POSSIBILITY OF SUCH  DAMAGE
- *
- * Code modified by Andrew Stephan for Sync OnSet
- *
- */
+* Copyright (c) 2012, David Erosa
+*
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without 
+* modification, are permitted provided that the following  conditions are met:
+*
+*   Redistributions of source code must retain the above copyright notice, 
+*      this list of conditions and the following disclaimer.
+*   Redistributions in binary form must reproduce the above copyright notice, 
+*      this list of conditions and the following  disclaimer in the 
+*      documentation and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE 
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+* ARE DISCLAIMED. IN NO EVENT  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  BUSINESS 
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDIN G NEGLIGENCE OR OTHERWISE) 
+* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+* POSSIBILITY OF SUCH  DAMAGE
+*
+* Code modified by Andrew Stephan for Sync OnSet
+*
+*/
 
 package com.synconset;
 
@@ -69,6 +69,7 @@ import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -112,6 +113,14 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
     private int quality;
     private OutputType outputType;
 
+    private String imageChooserDoneText;
+    private String imageChooserDiscardText;
+    private String limitAlertTitle;
+    private String limitAlertContent;
+    private String limitAlertButton;
+    private String processingImagesTitle;
+    private String processingImagesMessage;
+
     private final ImageFetcher fetcher = new ImageFetcher();
 
     private int selectedColor = 0xff32b2e1;
@@ -136,6 +145,15 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         quality = getIntent().getIntExtra(QUALITY_KEY, 0);
         maxImageCount = maxImages;
         outputType = OutputType.fromValue(getIntent().getIntExtra(OUTPUT_TYPE_KEY, 0));
+
+        Bundle bundle = getIntent().getExtras();
+        imageChooserDoneText = bundle.getString("imageChooserDoneText");
+        imageChooserDiscardText = bundle.getString("imageChooserDiscardText");
+        limitAlertTitle = bundle.getString("limitAlertTitle");
+        limitAlertContent = bundle.getString("limitAlertContent");
+        limitAlertButton = bundle.getString("limitAlertButton");
+        processingImagesTitle = bundle.getString("processingImagesTitle");
+        processingImagesMessage = bundle.getString("processingImagesMessage");
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -179,8 +197,8 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         setupHeader();
         updateAcceptButton();
         progress = new ProgressDialog(this);
-        progress.setTitle(getString(fakeR.getId("string", "multi_image_picker_processing_images_title")));
-        progress.setMessage(getString(fakeR.getId("string", "multi_image_picker_processing_images_message")));
+        progress.setTitle(processingImagesTitle);
+        progress.setMessage(processingImagesMessage);
     }
 
     @Override
@@ -197,9 +215,10 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         if (maxImages == 0 && isChecked) {
             isChecked = false;
             new AlertDialog.Builder(this)
-                    .setTitle(String.format(getString(fakeR.getId("string", "max_count_photos_title")), maxImageCount))
-                    .setMessage(String.format(getString(fakeR.getId("string", "max_count_photos_message")), maxImageCount))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setTitle(String.format(limitAlertTitle, maxImageCount))
+                    .setMessage(
+                            String.format(limitAlertContent, maxImageCount))
+                    .setPositiveButton(limitAlertButton, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
                         }
@@ -218,9 +237,9 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                 ImageView imageView = (ImageView) view;
 
                 if (android.os.Build.VERSION.SDK_INT >= 16) {
-                  imageView.setImageAlpha(128);
+                    imageView.setImageAlpha(128);
                 } else {
-                  imageView.setAlpha(128);
+                    imageView.setAlpha(128);
                 }
 
                 view.setBackgroundColor(selectedColor);
@@ -264,8 +283,7 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                 img.toArray(new String[img.size()]),
                 null,
                 null,
-                "DATE_MODIFIED DESC"
-        );
+                "DATE_MODIFIED DESC");
     }
 
     @Override
@@ -319,11 +337,11 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
             progress.dismiss();
             finish();
         } else {
-            setRequestedOrientation(getResources().getConfiguration().orientation); //prevent orientation changes during processing
+            setRequestedOrientation(getResources().getConfiguration().orientation); // prevent orientation changes
+                                                                                    // during processing
             new ResizeImagesTask().execute(fileNames.entrySet());
         }
     }
-
 
     /*********************
      * Helper Methods
@@ -345,7 +363,7 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
          * you may not use this file except in compliance with the License.
          * You may obtain a copy of the License at
          *
-         *     http://www.apache.org/licenses/LICENSE-2.0
+         * http://www.apache.org/licenses/LICENSE-2.0
          *
          * Unless required by applicable law or agreed to in writing, software
          * distributed under the License is distributed on an "AS IS" BASIS,
@@ -356,10 +374,11 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View customActionBarView = inflater.inflate(
                 fakeR.getId("layout", "actionbar_custom_view_done_discard"),
-                null
-        );
+                null);
 
         abDoneView = customActionBarView.findViewById(fakeR.getId("id", "actionbar_done"));
+        TextView abDoneTextView = abDoneView.findViewById(fakeR.getId("id", "actionbar_done_textview"));
+        abDoneTextView.setText(imageChooserDoneText);
         abDoneView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -369,6 +388,8 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         });
 
         abDiscardView = customActionBarView.findViewById(fakeR.getId("id", "actionbar_discard"));
+        TextView abDiscardTextView = abDiscardView.findViewById(fakeR.getId("id", "actionbar_discard_textview"));
+        abDiscardTextView.setText(imageChooserDiscardText);
         abDiscardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -383,12 +404,10 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                     ActionBar.DISPLAY_SHOW_CUSTOM,
                     ActionBar.DISPLAY_SHOW_CUSTOM
                             | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
+                            | ActionBar.DISPLAY_SHOW_TITLE);
             actionBar.setCustomView(customActionBarView, new ActionBar.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            ));
+                    ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
 
@@ -422,21 +441,19 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         return checkStatus.get(position);
     }
 
-
     /*********************
-    * Nested Classes
-    ********************/
+     * Nested Classes
+     ********************/
     private class SquareImageView extends ImageView {
         public SquareImageView(Context context) {
-			super(context);
-		}
+            super(context);
+        }
 
         @Override
         public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
         }
     }
-
 
     private class ImageAdapter extends BaseAdapter {
 
@@ -481,18 +498,18 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
 
             if (isChecked(position)) {
                 if (android.os.Build.VERSION.SDK_INT >= 16) {
-                  imageView.setImageAlpha(128);
+                    imageView.setImageAlpha(128);
                 } else {
-                  imageView.setAlpha(128);
+                    imageView.setAlpha(128);
                 }
 
                 imageView.setBackgroundColor(selectedColor);
 
             } else {
                 if (android.os.Build.VERSION.SDK_INT >= 16) {
-                  imageView.setImageAlpha(255);
+                    imageView.setImageAlpha(255);
                 } else {
-                  imageView.setAlpha(255);
+                    imageView.setAlpha(255);
                 }
                 imageView.setBackgroundColor(Color.TRANSPARENT);
             }
@@ -528,8 +545,8 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                     float scale = calculateScale(width, height);
 
                     if (scale < 1) {
-                        int finalWidth = (int)(width * scale);
-                        int finalHeight = (int)(height * scale);
+                        int finalWidth = (int) (width * scale);
+                        int finalHeight = (int) (height * scale);
                         int inSampleSize = calculateInSampleSize(options, finalWidth, finalHeight);
                         options = new BitmapFactory.Options();
                         options.inSampleSize = inSampleSize;
@@ -547,13 +564,13 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                     } else {
                         try {
                             bmp = this.tryToGetBitmap(file, null, rotate, false);
-                        } catch(OutOfMemoryError e) {
+                        } catch (OutOfMemoryError e) {
                             options = new BitmapFactory.Options();
                             options.inSampleSize = 2;
 
                             try {
                                 bmp = this.tryToGetBitmap(file, options, rotate, false);
-                            } catch(OutOfMemoryError e2) {
+                            } catch (OutOfMemoryError e2) {
                                 options = new BitmapFactory.Options();
                                 options.inSampleSize = 4;
 
@@ -621,9 +638,9 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         }
 
         private Bitmap tryToGetBitmap(File file,
-                                      BitmapFactory.Options options,
-                                      int rotate,
-                                      boolean shouldScale) throws IOException, OutOfMemoryError {
+                BitmapFactory.Options options,
+                int rotate,
+                boolean shouldScale) throws IOException, OutOfMemoryError {
             Bitmap bmp;
             if (options == null) {
                 bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -650,14 +667,14 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         }
 
         /*
-        * The following functions are originally from
-        * https://github.com/raananw/PhoneGap-Image-Resizer
-        *
-        * They have been modified by Andrew Stephan for Sync OnSet
-        *
-        * The software is open source, MIT Licensed.
-        * Copyright (C) 2012, webXells GmbH All Rights Reserved.
-        */
+         * The following functions are originally from
+         * https://github.com/raananw/PhoneGap-Image-Resizer
+         *
+         * They have been modified by Andrew Stephan for Sync OnSet
+         *
+         * The software is open source, MIT Licensed.
+         * Copyright (C) 2012, webXells GmbH All Rights Reserved.
+         */
         private File storeImage(Bitmap bmp, String fileName) throws IOException {
             int index = fileName.lastIndexOf('.');
             String name = fileName.substring(0, index);
@@ -687,7 +704,7 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
             return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         }
 
-       private String getBase64OfImage(Bitmap bm) {
+        private String getBase64OfImage(Bitmap bm) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -716,8 +733,8 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
     }
 
     private int calculateNextSampleSize(int sampleSize) {
-        double logBaseTwo = (int)(Math.log(sampleSize) / Math.log(2));
-        return (int)Math.pow(logBaseTwo + 1, 2);
+        double logBaseTwo = (int) (Math.log(sampleSize) / Math.log(2));
+        return (int) Math.pow(logBaseTwo + 1, 2);
     }
 
     private float calculateScale(int width, int height) {
@@ -726,18 +743,18 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         float scale = 1.0f;
         if (desiredWidth > 0 || desiredHeight > 0) {
             if (desiredHeight == 0 && desiredWidth < width) {
-                scale = (float)desiredWidth/width;
+                scale = (float) desiredWidth / width;
 
             } else if (desiredWidth == 0 && desiredHeight < height) {
-                scale = (float)desiredHeight/height;
+                scale = (float) desiredHeight / height;
 
             } else {
                 if (desiredWidth > 0 && desiredWidth < width) {
-                    widthScale = (float)desiredWidth/width;
+                    widthScale = (float) desiredWidth / width;
                 }
 
                 if (desiredHeight > 0 && desiredHeight < height) {
-                    heightScale = (float)desiredHeight/height;
+                    heightScale = (float) desiredHeight / height;
                 }
 
                 if (widthScale < heightScale) {
