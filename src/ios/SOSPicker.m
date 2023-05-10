@@ -190,13 +190,16 @@ typedef enum : NSUInteger {
     CDVPluginResult* result = nil;
 
     for (GMFetchItem *item in fetchArray) {
+        // unique file name
+        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+        NSNumber *timeStampObj = [NSNumber numberWithDouble: timeStamp];
 
         if ( !item.image_fullsize ) {
             continue;
         }
 
         do {
-            filePath = [NSString stringWithFormat:@"%@/%@%03d.%@", docsPath, CDV_PHOTO_PREFIX, i++, @"jpg"];
+            filePath = [NSString stringWithFormat:@"%@/%@%ld%d.%@", docsPath, CDV_PHOTO_PREFIX, [timeStampObj longValue],i++ , @"jpg"];
         } while ([fileMgr fileExistsAtPath:filePath]);
 
         NSData* data = nil;
