@@ -1,5 +1,5 @@
 {
-  "version": "0.0.4",
+  "version": "0.0.5",
   "originVersion": "2.3.6",
   "name": "@wisdomgarden/cordova-plugin-imagepicker",
   "cordova_name": "ImagePicker",
