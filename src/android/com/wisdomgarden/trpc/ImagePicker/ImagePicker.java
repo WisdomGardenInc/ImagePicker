@@ -134,14 +134,15 @@ public class ImagePicker extends CordovaPlugin {
              * }
              */
             // .. until then use:
-            if (hasReadPermission()) {
-                cordova.startActivityForResult(this, imagePickerIntent, 0);
-            } else {
-                requestReadPermission();
-                // The downside is the user needs to re-invoke this picker method.
-                // The best thing to do for the dev is check 'hasReadPermission' manually and
-                // run 'requestReadPermission' or 'getPictures' based on the outcome.
-            }
+            cordova.startActivityForResult(this, imagePickerIntent, 0);
+            // if (hasReadPermission()) {
+            //     cordova.startActivityForResult(this, imagePickerIntent, 0);
+            // } else {
+            //     requestReadPermission();
+            //     // The downside is the user needs to re-invoke this picker method.
+            //     // The best thing to do for the dev is check 'hasReadPermission' manually and
+            //     // run 'requestReadPermission' or 'getPictures' based on the outcome.
+            // }
             return true;
         }
         return false;
