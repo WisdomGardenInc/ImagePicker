@@ -174,13 +174,21 @@
 
     if (nImages>0 && nVideos>0)
     {
-        NSString *multipleItemsText = self.multipleItemsText ?: NSLocalizedStringFromTable(@"picker.selection.multiple-items", @"GMImagePicker", @"%@ Items Selected");
-        return [NSString stringWithFormat:multipleItemsText, @(nImages+nVideos)];
+        if (self.multipleItemsText && [self.multipleItemsText containsString:@"%n"]) {
+            return [self.multipleItemsText stringByReplacingOccurrencesOfString:@"%n"
+                                                                     withString:[NSString stringWithFormat:@"%ld", (long)(nImages+nVideos)]];
+        } else {
+            return [NSString stringWithFormat:NSLocalizedStringFromTable(@"picker.selection.multiple-items", @"GMImagePicker", @"%@ Items Selected"), @(nImages+nVideos)];
+        }
     }
     else if (nImages>1)
     {
-        NSString *multiplePhotosText = self.multiplePhotosText ?: NSLocalizedStringFromTable(@"picker.selection.multiple-photos", @"GMImagePicker", @"%@ Photos Selected");
-        return [NSString stringWithFormat:multiplePhotosText, @(nImages)];
+        if (self.multiplePhotosText && [self.multiplePhotosText containsString:@"%n"]) {
+            return [self.multiplePhotosText stringByReplacingOccurrencesOfString:@"%n"
+                                                                     withString:[NSString stringWithFormat:@"%ld", (long)(nImages)]];
+        } else {
+            return [NSString stringWithFormat:NSLocalizedStringFromTable(@"picker.selection.multiple-photos", @"GMImagePicker", @"%@ Photos Selected"), @(nImages)];
+        }
     }
     else if (nImages==1)
     {
@@ -189,8 +197,12 @@
     }
     else if (nVideos>1)
     {
-        NSString *multipleVideosText = self.multipleVideosText ?: NSLocalizedStringFromTable(@"picker.selection.multiple-videos", @"GMImagePicker", @"%@ Videos Selected");
-        return [NSString stringWithFormat:multipleVideosText, @(nVideos)];
+        if (self.multipleVideosText && [self.multipleVideosText containsString:@"%n"]) {
+            return [self.multipleVideosText stringByReplacingOccurrencesOfString:@"%n"
+                                                                     withString:[NSString stringWithFormat:@"%ld", (long)(nVideos)]];
+        } else {
+            return [NSString stringWithFormat:NSLocalizedStringFromTable(@"picker.selection.multiple-videos", @"GMImagePicker", @"%@ Videos Selected"), @(nVideos)];
+        }
     }
     else if (nVideos==1)
     {

@@ -104,7 +104,7 @@ static CGSize const kPopoverContentSize = {480, 720};
 /**
  *  Text displayed when selecting multiple photos.
  *  Can be customized to provide localized or contextual prompts.
- *  Must include a `%@` placeholder for the number of selected photos.
+ *  Must include a `%n` placeholder for the number of selected photos.
  */
 @property (nonatomic, copy) NSString *multiplePhotosText;
 
@@ -117,14 +117,14 @@ static CGSize const kPopoverContentSize = {480, 720};
 /**
  *  Text displayed when selecting multiple videos.
  *  Can be customized to provide localized or contextual prompts.
- *  Must include a `%@` placeholder for the number of selected videos.
+ *  Must include a `%n` placeholder for the number of selected videos.
  */
 @property (nonatomic, copy) NSString *multipleVideosText;
 
 /**
  *  Text displayed when selecting multiple items (photos/videos).
  *  Can be customized to provide localized or contextual prompts.
- *  Must include a `%@` placeholder for the number of selected items.
+ *  Must include a `%n` placeholder for the number of selected items.
  */
 @property (nonatomic, copy) NSString *multipleItemsText;
 

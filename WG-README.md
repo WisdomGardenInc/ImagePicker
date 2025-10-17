@@ -12,3 +12,6 @@ supported android 13
 
 ### v0.0.7
 fix ios i18n
+
+### v0.0.8
+fix ios i18n
