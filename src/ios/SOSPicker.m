@@ -39,25 +39,25 @@ typedef enum : NSUInteger {
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
     if (status == PHAuthorizationStatusAuthorized) {
         NSLog(@"Access has been granted.");
-        
+
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     } else if (status == PHAuthorizationStatusDenied) {
         NSString* message = @"Access has been denied. Change your setting > this app > Photo enable";
         NSLog(@"%@", message);
-        
+
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:message];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     } else if (status == PHAuthorizationStatusNotDetermined) {
         // Access has not been determined. requestAuthorization: is available
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {}];
-        
+
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     } else if (status == PHAuthorizationStatusRestricted) {
         NSString* message = @"Access has been restricted. Change your setting > Privacy > Photo enable";
         NSLog(@"%@", message);
-        
+
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:message];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
@@ -79,12 +79,17 @@ typedef enum : NSUInteger {
     self.width = [[options objectForKey:@"width"] integerValue];
     self.height = [[options objectForKey:@"height"] integerValue];
     self.quality = [[options objectForKey:@"quality"] integerValue];
+    NSDictionary *textOptions = [options objectForKey:@"options"];
+    if (![textOptions isKindOfClass:[NSDictionary class]]) {
+        textOptions = @{};
+    }
 
     self.callbackId = command.callbackId;
-    [self launchGMImagePicker:allow_video title:title message:message disable_popover:disable_popover maximumImagesCount:maximumImagesCount];
+    [self launchGMImagePicker:allow_video title:title message:message disable_popover:disable_popover maximumImagesCount:maximumImagesCount textOptions:textOptions];
 }
 
 - (void)launchGMImagePicker:(bool)allow_video title:(NSString *)title message:(NSString *)message disable_popover:(BOOL)disable_popover maximumImagesCount:(NSInteger)maximumImagesCount
+            textOptions:(NSDictionary *)textOptions
 {
     GMImagePickerController *picker = [[GMImagePickerController alloc] init:allow_video];
     picker.delegate = self;
@@ -94,6 +99,15 @@ typedef enum : NSUInteger {
     picker.colsInPortrait = 4;
     picker.colsInLandscape = 6;
     picker.minimumInteritemSpacing = 2.0;
+
+    picker.doneText = [textOptions objectForKey:@"imageChooserDoneText"];
+    picker.discardText = [textOptions objectForKey:@"imageChooserDiscardText"];
+
+    picker.singlePhotoText = [textOptions objectForKey:@"iosSinglePhotoText"];
+    picker.multiplePhotosText = [textOptions objectForKey:@"iosMultiplePhotosText"];
+    picker.singleVideoText = [textOptions objectForKey:@"iosSingleVideoText"];
+    picker.multipleVideosText = [textOptions objectForKey:@"iosMultipleVideosText"];
+    picker.multipleItemsText = [textOptions objectForKey:@"iosMultipleItemsText"];
 
     if(!disable_popover) {
         picker.modalPresentationStyle = UIModalPresentationPopover;

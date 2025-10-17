@@ -84,6 +84,51 @@ static CGSize const kPopoverContentSize = {480, 720};
 @property (nonatomic, strong) UINavigationController *navigationController;
 
 /**
+ *  Text for the "Done" button in the picker.
+ *  If not set, a default value will be used.
+ */
+@property (nonatomic, copy) NSString *doneText;
+
+/**
+ *  Text for the "Cancel/Discard" button in the picker.
+ *  If not set, a default value will be used.
+ */
+@property (nonatomic, copy) NSString *discardText;
+
+/**
+ *  Text displayed when selecting a single photo.
+ *  Can be customized to provide localized or contextual prompts.
+ */
+@property (nonatomic, copy) NSString *singlePhotoText;
+
+/**
+ *  Text displayed when selecting multiple photos.
+ *  Can be customized to provide localized or contextual prompts.
+ *  Must include a `%@` placeholder for the number of selected photos.
+ */
+@property (nonatomic, copy) NSString *multiplePhotosText;
+
+/**
+ *  Text displayed when selecting a single video.
+ *  Can be customized to provide localized or contextual prompts.
+ */
+@property (nonatomic, copy) NSString *singleVideoText;
+
+/**
+ *  Text displayed when selecting multiple videos.
+ *  Can be customized to provide localized or contextual prompts.
+ *  Must include a `%@` placeholder for the number of selected videos.
+ */
+@property (nonatomic, copy) NSString *multipleVideosText;
+
+/**
+ *  Text displayed when selecting multiple items (photos/videos).
+ *  Can be customized to provide localized or contextual prompts.
+ *  Must include a `%@` placeholder for the number of selected items.
+ */
+@property (nonatomic, copy) NSString *multipleItemsText;
+
+/**
  *  Managing Asset Selection
  */
 - (void)selectAsset:(PHAsset *)asset;
