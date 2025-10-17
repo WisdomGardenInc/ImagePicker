@@ -129,6 +129,25 @@ static CGSize const kPopoverContentSize = {480, 720};
 @property (nonatomic, copy) NSString *multipleItemsText;
 
 /**
+ *  Label text for the "All Photos" album.
+ *  Can be customized to provide localized or contextual prompts.
+ */
+@property (nonatomic, copy) NSString *allPhotosLabel;
+
+/**
+ *  Header text displayed above the list of smart albums.
+ *  Can be customized to provide localized or contextual prompts.
+ */
+@property (nonatomic, copy) NSString *smartAlbumsHeader;
+
+/**
+ *  Header text displayed above the list of user-created albums.
+ *  Can be customized to provide localized or contextual prompts.
+ */
+@property (nonatomic, copy) NSString *userAlbumsHeader;
+
+
+/**
  *  Managing Asset Selection
  */
 - (void)selectAsset:(PHAsset *)asset;

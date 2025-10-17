@@ -108,6 +108,9 @@ typedef enum : NSUInteger {
     picker.singleVideoText = [textOptions objectForKey:@"iosSingleVideoText"];
     picker.multipleVideosText = [textOptions objectForKey:@"iosMultipleVideosText"];
     picker.multipleItemsText = [textOptions objectForKey:@"iosMultipleItemsText"];
+    picker.allPhotosLabel = [textOptions objectForKey:@"iosAllPhotosLabel"];
+    picker.smartAlbumsHeader = [textOptions objectForKey:@"iosSmartAlbumsHeader"];
+    picker.userAlbumsHeader = [textOptions objectForKey:@"iosUserAlbumsHeader"];
 
     if(!disable_popover) {
         picker.modalPresentationStyle = UIModalPresentationPopover;

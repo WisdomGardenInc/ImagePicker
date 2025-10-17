@@ -15,3 +15,6 @@ fix ios i18n
 
 ### v0.0.8
 fix ios i18n
+
+### v0.0.9
+fix ios i18n
