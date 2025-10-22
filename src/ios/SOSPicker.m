@@ -111,6 +111,7 @@ typedef enum : NSUInteger {
     picker.allPhotosLabel = [textOptions objectForKey:@"iosAllPhotosLabel"];
     picker.smartAlbumsHeader = [textOptions objectForKey:@"iosSmartAlbumsHeader"];
     picker.userAlbumsHeader = [textOptions objectForKey:@"iosUserAlbumsHeader"];
+    picker.navigationBackLabel = [textOptions objectForKey:@"navigationBackLabel"];
 
     if(!disable_popover) {
         picker.modalPresentationStyle = UIModalPresentationPopover;

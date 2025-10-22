@@ -146,6 +146,14 @@ static CGSize const kPopoverContentSize = {480, 720};
  */
 @property (nonatomic, copy) NSString *userAlbumsHeader;
 
+/**
+ *  Text displayed on the navigation bar's back button.
+ *  Can be customized to provide localized or contextual prompts.
+ *  If not set, the system default "Back" label will be used.
+ */
+@property (nonatomic, copy) NSString *navigationBackLabel;
+
+
 
 /**
  *  Managing Asset Selection

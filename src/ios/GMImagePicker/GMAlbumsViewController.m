@@ -364,6 +364,13 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     GMGridViewController *gridViewController = [[GMGridViewController alloc] initWithPicker:[self picker]];
     //Set the title
     gridViewController.title = cell.titleLabel.text;
+    //Set left back text
+    if (self.picker.navigationBackLabel.length > 0){
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:self.picker.navigationBackLabel
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil];
+    }
     //Use the prefetched assets!
     gridViewController.assetsFetchResults = [[_collectionsFetchResultsAssets objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     gridViewController.dic_asset_fetches = dic_asset_fetches;

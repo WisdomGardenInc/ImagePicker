@@ -18,3 +18,6 @@ fix ios i18n
 
 ### v0.0.9
 fix ios i18n
+
+### v0.0.10
+add custom navigation back label for ios
